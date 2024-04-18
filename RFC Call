@@ -1,0 +1,26 @@
+DATA: lv_destination TYPE rfcdest,
+      lo_dp_facade TYPE REF TO /iwbep/if_mgw_dp_facade,
+      lo_dp_facade = /iwbep/if_mgw_conv_srv_runtime~get_dp_facade( ),
+      lv_destination = /iwbep/cl_sb_gen_dpc_rt_util=>get_rfc_destination( io_dp_facade = lo_dp_facade ).
+
+ IF lv_destination IS INITIAL OR lv_destination EQ 'NONE'.
+
+       CALL FUNCTION 'ZFPP_RFC_GET_PO_STATUS'
+         TABLES
+           et_order_status = et_order_status
+           it_prod_order   = it_prod_order
+         EXCEPTIONS
+           system_failure  = 1000 message lv_exc_msg
+           OTHERS          = 1002. 
+
+ ELSE.
+
+   CALL FUNCTION 'ZFPP_RFC_GET_PO_STATUS' DESTINATION lv_destination
+     TABLES
+       et_order_status       = et_order_status
+       it_prod_order         = it_prod_order
+     EXCEPTIONS
+       system_failure        = 1000 MESSAGE lv_exc_msg
+       communication_failure = 1001 MESSAGE lv_exc_msg
+       OTHERS                = 1002.
+ ENDIF. 
