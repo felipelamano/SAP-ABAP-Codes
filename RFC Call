@@ -1,6 +1,6 @@
 DATA: lv_destination TYPE rfcdest,
-      lo_dp_facade TYPE REF TO /iwbep/if_mgw_dp_facade,
-      lo_dp_facade = /iwbep/if_mgw_conv_srv_runtime~get_dp_facade( ),
+      lo_dp_facade TYPE REF TO /iwbep/if_mgw_dp_facade.
+      lo_dp_facade = /iwbep/if_mgw_conv_srv_runtime~get_dp_facade( ).
       lv_destination = /iwbep/cl_sb_gen_dpc_rt_util=>get_rfc_destination( io_dp_facade = lo_dp_facade ).
 
  IF lv_destination IS INITIAL OR lv_destination EQ 'NONE'.
