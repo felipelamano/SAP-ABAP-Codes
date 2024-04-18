@@ -1,0 +1,25 @@
+Data: 
+lt_filter_select_options TYPE /iwbep/t_mgw_select_option,
+lo_filter                TYPE  REF TO /iwbep/if_mgw_req_filter,
+ls_filter                TYPE /iwbep/s_mgw_select_option,
+lr_werks                 LIKE RANGE OF ls_converted_keys-werks.
+LOOP AT lt_filter_select_options INTO ls_filter.
+CASE ls_filter-property.
+          WHEN 'WERKS'.
+            lo_filter->convert_select_option(
+              EXPORTING
+                is_select_option = ls_filter
+              IMPORTING
+                et_select_option = lr_werks ).
+WHEN OTHERS.
+            me->/iwbep/if_sb_dpc_comm_services~log_message(
+              EXPORTING
+                iv_msg_type   = 'E'
+                iv_msg_id     = '/IWBEP/MC_SB_DPC_ADM'
+                iv_msg_number = 020
+                iv_msg_v1     = ls_filter-property ).
+            RAISE EXCEPTION TYPE /iwbep/cx_mgw_tech_exception
+              EXPORTING
+                textid = /iwbep/cx_mgw_tech_exception=>internal_error.
+        ENDCASE. 
+ENDLOOP.
